@@ -1,11 +1,11 @@
 services:
   - type: web
-    name: your-service-name  # Replace with your desired service name
+    name: techmate
     env: node
     plan: free
-    region: frankfurt  # Choose the Frankfurt region
+    region: frankfurt
     buildCommand: npm install
-    startCommand: node server.js  # Command to start your server
+    startCommand: npm start
     envVars:
-      - key: NODE_ENV
-        value: production
+      - key: MONGODB_URI
+        value: "mongodb+srv://AppleIcecream:Doz90854Xaz02296@applecluster.7rcuz.mongodb.net/your-database-name?retryWrites=true&w=majority"

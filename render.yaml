@@ -1,11 +1,11 @@
 services:
   - type: web
-    name: your-service-name  # Replace with your service name
+    name: your-service-name  # Replace with your desired service name
     env: node
     plan: free
-    region: frankfurt  # Set to Frankfurt
+    region: frankfurt  # Choose the Frankfurt region
     buildCommand: npm install
-    startCommand: node server.js  # Use node server.js to start your server
-    envVars:  # Correctly formatted environment variables
+    startCommand: node server.js  # Command to start your server
+    envVars:
       - key: NODE_ENV
         value: production

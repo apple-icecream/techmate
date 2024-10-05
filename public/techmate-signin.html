@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up / Login</title>
+    <link rel="stylesheet" href="techmate-signin.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="nadpis"><h1>Techmate</h1></div>
+    <br>
+    <div class="container">
+        <div class="form-container">
+
+            <!-- Login form -->
+            <form id="loginForm" class="form">
+                <h2>Login</h2>
+                <p id="loginError" class="error"></p>
+                <input type="text" placeholder="Username" id="loginUsername" required>
+                <input type="password" placeholder="Password" id="loginPassword" required>
+                <button type="submit">Login</button>
+            </form>
+
+            <!-- Sign-up form (hidden by default) -->
+            <form id="signupForm" class="form hidden">
+                <h2>Sign Up</h2>
+                <p id="signupError" class="error"></p>
+                <input type="text" placeholder="Username" id="signupUsername" required>
+                <input type="password" placeholder="Password" id="signupPassword" required>
+                <input type="password" placeholder="Confirm Password" id="signupConfirmPassword" required>
+                <button type="submit">Sign Up</button>
+            </form>
+
+            <!-- Buttons to switch between forms -->
+            <div class="form-toggle">
+                <button id="loginBtn" onclick="showLogin()">Login</button>
+                <button id="signupBtn" onclick="showSignUp()">Sign Up</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Toggle between login and sign-up forms
+        function showLogin() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('signupForm').classList.add('hidden');
+            clearErrors();
+        }
+
+        function showSignUp() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.remove('hidden');
+            clearErrors();
+        }
+
+        // Clear any displayed error messages
+        function clearErrors() {
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('signupError').textContent = '';
+        }
+
+        // Function to display error messages
+        function displayError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        // Function to check password match before submission
+        function validatePassword(password, confirmPassword) {
+            if (password !== confirmPassword) {
+                displayError('signupError', 'Passwords do not match.');
+                return false;
+            }
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sign-up form submission
+            document.getElementById('signupForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const username = document.getElementById('signupUsername').value;
+                const password = document.getElementById('signupPassword').value;
+                const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+                // Validate passwords before sending the request
+                if (!validatePassword(password, confirmPassword)) return;
+
+                try {
+                    const response = await fetch('/signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ username, password, confirmPassword })
+                    });
+
+                    const result = await response.text();
+                    if (response.ok) {
+                        alert(result);  // Or better: use a success message in the UI
+                        showLogin();  // Switch to login form after successful signup
+                    } else {
+                        displayError('signupError', result);
+                    }
+                } catch (error) {
+                    displayError('signupError', 'An error occurred during sign-up.');
+                }
+            });
+
+            // Login form submission
+            document.getElementById('loginForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+
+                try {
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ username, password })
+                    });
+
+                    if (response.ok) {
+                        window.location.href = '/homepage';  // Redirect to homepage after successful login
+                    } else {
+                        const result = await response.text();
+                        displayError('loginError', result);
+                    }
+                } catch (error) {
+                    displayError('loginError', 'An error occurred during login.');
+                }
+            });
+
+            // Initially show login form
+            showLogin();
+        });
+    </script>
+</body>
+</html>

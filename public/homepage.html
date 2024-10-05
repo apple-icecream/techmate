@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techmate</title>
+    <link rel="stylesheet" href="techmate-homepage.css">
+</head>
+<body>
+    <div class="nadpis">
+        <img src="images/logo.png" class="logo" alt="Techmate Logo">
+        <span id="text">Techmate</span>
+        <div class="options">
+            <span id="create">create</span>
+            <span id="logout">log out</span>
+            <span id="settings">settings</span>
+        </div>
+        <img src="images/menu-button.png" id="menu-button" alt="Menu Button">
+    </div>
+
+    <div class="search-container" style="text-align:center;">
+        <input type="text" id="search-bar" placeholder="Search for calculators...">
+        <button type="button" id="search-button">Search</button>
+    </div>
+
+    <div id="container">
+        <span style="color:white; font-size:clamp(19px, 3vw, 30px);">Choose a topic</span>
+    </div>
+
+    <script>
+        // Topics can be loaded from the server if needed
+        const topics = ["Electrical engineering", "Math", "Statistics", "Chemistry", "Construction", "Physics", "Others..."];
+        let num = 0;
+
+        // Load topics with animation
+        function loadTopics() {
+            topics.forEach((topic, index) => {
+                setTimeout(() => {
+                    const newTopic = document.createElement("div");
+                    newTopic.classList.add("topic");
+                    newTopic.textContent = topic;
+
+                    newTopic.addEventListener('click', () => {
+                        // Redirect to specific calculator or topic page
+                        window.location.href = `/topic/${topic.toLowerCase()}`; // Example routing
+                    });
+
+                    document.getElementById("container").appendChild(newTopic);
+                }, index * 200); // Delay to create animation effect
+            });
+        }
+
+        loadTopics(); // Call the function to load topics
+
+        // Function to simulate text typing animation
+        function consoleText(words, id) {
+            var visible = true;
+            var con = document.getElementById('console');
+            var letterCount = 1;
+            var x = 1;
+            var waiting = false;
+            var target = document.getElementById(id);
+            target.setAttribute('style', 'color:#fff'); // Default color
+
+            window.setInterval(function() {
+                if (letterCount === 0 && waiting === false) {
+                    waiting = true;
+                    target.innerHTML = words[0].substring(0, letterCount);
+                    window.setTimeout(function() {
+                        // Reset animation
+                        target.innerHTML = words[0];
+                        waiting = false;
+                    }, 1000);
+                } else if (waiting === false) {
+                    target.innerHTML = words[0].substring(0, letterCount);
+                    letterCount += x;
+                }
+            }, 120);
+        }
+
+        consoleText(['Techmate'], 'text');
+
+        // Placeholder animation for search bar
+        const placeholder = ["Search for calculators", "Search for calculators.", "Search for calculators..", "Search for calculators..."];
+        let n = 0;
+
+        function searchAnim() {
+            window.setInterval(function() {
+                if (n == 4) {
+                    n = 0;
+                }
+                document.getElementById("search-bar").placeholder = placeholder[n];
+                n++;
+            }, 1000);
+        }
+
+        searchAnim();
+
+        // Add functionality for log out
+        document.getElementById('logout').addEventListener('click', function() {
+            // Send logout request to the server
+            fetch('/logout', {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/'; // Redirect to login page
+                }
+            }).catch(err => console.error('Logout failed', err));
+        });
+    </script>
+</body>
+</html>

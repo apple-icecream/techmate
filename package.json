@@ -1,15 +1,15 @@
 {
   "name": "techmate",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12",
+    "body-parser": "^1.19.0",
+    "crypto": "^1.0.1" // optional as it's built-in
   }
 }

@@ -6,5 +6,6 @@ services:
     region: frankfurt  # Set to Frankfurt
     buildCommand: npm install
     startCommand: node server.js  # Use node server.js to start your server
-    envVars:
-      NODE_ENV: production  # Environment variables
+    envVars:  # Correctly formatted environment variables
+      - key: NODE_ENV
+        value: production

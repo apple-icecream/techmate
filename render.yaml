@@ -1,0 +1,14 @@
+version: 1
+services:
+  - type: web
+    name: server.js
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    region: frankfurt  # or any other supported region
+    envVars:
+      NODE_ENV: production  # Environment variables
+      ANOTHER_ENV_VAR: value
+    plan: starter  # Choose your plan (e.g., starter, professional)
+    healthCheckPath: /  # Health check endpoint (optional)

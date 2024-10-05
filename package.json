@@ -9,7 +9,6 @@
   "dependencies": {
     "express": "^4.17.1",
     "mongoose": "^6.0.12",
-    "body-parser": "^1.19.0",
-    "crypto": "^1.0.1" // optional as it's built-in
+    "body-parser": "^1.19.0"
   }
 }

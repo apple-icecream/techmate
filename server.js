@@ -1,54 +1,15 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const crypto = require('crypto'); // For password hashing
+const crypto = require('crypto');
 const mongoose = require('mongoose');
-const { MongoClient, ServerApiVersion } = require('mongodb'); // For MongoDB connection to Atlas
 
 const app = express();
 const port = process.env.PORT || 3107;
 
-// MongoDB Atlas Connection URI and Client Setup
-const uri = "mongodb+srv://AppleIcecream:Doz90854Xaz02296@applecluster.7rcuz.mongodb.net/?retryWrites=true&w=majority&appName=AppleCluster";
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
-
-// Connect to MongoDB Atlas using MongoClient
-async function connectToMongoClient() {
-    try {
-        // Connect the client to the server
-        await client.connect();
-
-        // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB Atlas!");
-
-        // Test: Insert a sample document into a test collection
-        const db = client.db('testdb'); // Replace 'testdb' with your database name
-        const collection = db.collection('testCollection'); // Replace 'testCollection' with your collection name
-        
-        const testDoc = { name: 'Test Document', value: 123 }; // Sample test document
-        const result = await collection.insertOne(testDoc);
-        console.log('Test document inserted with _id:', result.insertedId);
-
-    } catch (error) {
-        console.error('Failed to connect to MongoDB Atlas:', error);
-    } finally {
-        // Ensures that the client will close when finished or an error occurs
-        await client.close();
-    }
-}
-
-// Immediately run MongoDB Atlas connection
-connectToMongoClient();
-
-// Mongoose local MongoDB connection
-mongoose.connect('mongodb://localhost:27017/techmate', {
+// MongoDB Atlas Connection URI from environment variable
+const uri = process.env.MONGODB_URI; // Set this in Render's environment variables
+mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -56,7 +17,7 @@ mongoose.connect('mongodb://localhost:27017/techmate', {
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-    console.log("Connected to the local MongoDB database!");
+    console.log("Connected to the MongoDB database!");
 });
 
 // Define User Schema using Mongoose

@@ -1,14 +1,10 @@
-version: 1
 services:
   - type: web
-    name: server.js
+    name: your-service-name  # Replace with your service name
     env: node
+    plan: free
+    region: frankfurt  # Set to Frankfurt
     buildCommand: npm install
-    startCommand: npm start
-    autoDeploy: true
-    region: frankfurt  # or any other supported region
+    startCommand: node server.js  # Use node server.js to start your server
     envVars:
       NODE_ENV: production  # Environment variables
-      ANOTHER_ENV_VAR: value
-    plan: starter  # Choose your plan (e.g., starter, professional)
-    healthCheckPath: /  # Health check endpoint (optional)

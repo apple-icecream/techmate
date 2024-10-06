@@ -5,27 +5,22 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 
 const app = express();
+
+// Use the dynamic port from Render's environment, or fallback to 3107 for local development
 const port = process.env.PORT || 3107;
 
-// MongoDB Atlas Connection URI from environment variables
-const mongoUser = 'AppleIcecream';
-const mongoPassword = process.env.DB_PASSWORD; // Set this in Render's environment variables
-const mongoCluster = 'applecluster.7rcuz.mongodb.net';
-const mongoDbName = 'techmate'; // Replace with your database name
+// MongoDB Atlas Connection URI from environment variable
+const uri = process.env.MONGODB_URI; // Make sure this is set in Render's environment variables
+mongoose.set('strictQuery', true); // Suppress deprecation warning for strictQuery
 
-// Construct the MongoDB URI
-const uri = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoCluster}/${mongoDbName}?retryWrites=true&w=majority&appName=AppleCluster`;
-
-// Connect to MongoDB using Mongoose
+// MongoDB Connection
 mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-});
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
+}).then(() => {
     console.log("Connected to the MongoDB database!");
+}).catch((error) => {
+    console.error("Error connecting to MongoDB:", error);
 });
 
 // Define User Schema using Mongoose
@@ -107,5 +102,5 @@ app.post('/login', async (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });

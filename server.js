@@ -7,8 +7,16 @@ const mongoose = require('mongoose');
 const app = express();
 const port = process.env.PORT || 3107;
 
-// MongoDB Atlas Connection URI from environment variable
-const uri = process.env.MONGODB_URI; // Set this in Render's environment variables
+// MongoDB Atlas Connection URI from environment variables
+const mongoUser = 'AppleIcecream';
+const mongoPassword = process.env.DB_PASSWORD; // Set this in Render's environment variables
+const mongoCluster = 'applecluster.7rcuz.mongodb.net';
+const mongoDbName = 'techmate'; // Replace with your database name
+
+// Construct the MongoDB URI
+const uri = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoCluster}/${mongoDbName}?retryWrites=true&w=majority&appName=AppleCluster`;
+
+// Connect to MongoDB using Mongoose
 mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
